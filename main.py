@@ -145,6 +145,9 @@ class Ui_MainWindow(object):
     def add_item(self):
         new_data = self.read_inputs()
 
+        if new_data[0] == "":
+            return
+
         if new_data[0] in data.values:
 
             index = data.index[data["call"] == new_data[0]][0]
