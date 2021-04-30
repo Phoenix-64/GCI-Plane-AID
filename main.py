@@ -34,6 +34,7 @@ class Ui_MainWindow(object):
         self.intend_input.addItem("")
         self.intend_input.addItem("")
         self.intend_input.addItem("")
+        self.intend_input.addItem("")
         self.gridLayout.addWidget(self.intend_input, 1, 2, 1, 1)
         self.target_label = QtWidgets.QLabel(self.gridLayoutWidget)
         self.target_label.setObjectName("target_label")
@@ -99,9 +100,10 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.intend_label.setText(_translate("MainWindow", "Intend"))
-        self.intend_input.setItemText(0, _translate("MainWindow", "SEAD"))
-        self.intend_input.setItemText(1, _translate("MainWindow", "CAS"))
-        self.intend_input.setItemText(2, _translate("MainWindow", "CAP"))
+        self.intend_input.setItemText(0, _translate("MainWindow", ""))
+        self.intend_input.setItemText(1, _translate("MainWindow", "SEAD"))
+        self.intend_input.setItemText(2, _translate("MainWindow", "CAS"))
+        self.intend_input.setItemText(3, _translate("MainWindow", "CAP"))
         self.target_label.setText(_translate("MainWindow", "Target Area"))
         self.weapons_label.setText(_translate("MainWindow", "Weapons"))
         self.register_trigger.setText(_translate("MainWindow", "Register"))
@@ -132,7 +134,7 @@ class Ui_MainWindow(object):
 
     def clear_inputs(self):
         self.callsing_input.setText("")
-        self.intend_input.setCurrentText("SEAD")
+        self.intend_input.setCurrentText("")
         self.target_input.setText("")
         self.weapons_input.setText("")
 
@@ -153,7 +155,7 @@ class Ui_MainWindow(object):
             index = data.index[data["call"] == new_data[0]][0]
             new_data = new_data.drop("call")
 
-            if new_data["intend"] == data.iloc[index][1]:
+            if new_data["intend"] == "":
                 new_data = new_data.drop("intend")
 
             if new_data["target"] == "":
