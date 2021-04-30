@@ -12,11 +12,11 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(1000, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 771, 61))
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 971, 61))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -42,27 +42,39 @@ class Ui_MainWindow(object):
         self.weapons_label = QtWidgets.QLabel(self.gridLayoutWidget)
         self.weapons_label.setObjectName("weapons_label")
         self.gridLayout.addWidget(self.weapons_label, 0, 4, 1, 1)
+        self.fuel_label = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.fuel_label.setObjectName("fuel_label")
+        self.gridLayout.addWidget(self.fuel_label, 0, 5, 1, 1)
+        self.notes_label = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.notes_label.setObjectName("notes_label")
+        self.gridLayout.addWidget(self.notes_label, 0, 6, 1, 1)
         self.register_trigger = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.register_trigger.setObjectName("register_trigger")
-        self.gridLayout.addWidget(self.register_trigger, 1, 5, 1, 1)
+        self.gridLayout.addWidget(self.register_trigger, 1, 6, 1, 1)
         self.callsing_label = QtWidgets.QLabel(self.gridLayoutWidget)
         self.callsing_label.setObjectName("callsing_label")
         self.gridLayout.addWidget(self.callsing_label, 0, 1, 1, 1)
         self.clear_trigger = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.clear_trigger.setObjectName("clear_trigger")
-        self.gridLayout.addWidget(self.clear_trigger, 1, 6, 1, 1)
+        self.gridLayout.addWidget(self.clear_trigger, 1, 7, 1, 1)
         self.weapons_input = QtWidgets.QLineEdit(self.gridLayoutWidget)
         self.weapons_input.setObjectName("weapons_input")
         self.gridLayout.addWidget(self.weapons_input, 1, 4, 1, 1)
         self.target_input = QtWidgets.QLineEdit(self.gridLayoutWidget)
         self.target_input.setObjectName("target_input")
         self.gridLayout.addWidget(self.target_input, 1, 3, 1, 1)
+        self.fuel_input = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.fuel_input.setObjectName("fuel_input")
+        self.gridLayout.addWidget(self.fuel_input, 1, 4, 1, 1)
+        self.notes_input = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.notes_input.setObjectName("notes_input")
+        self.gridLayout.addWidget(self.notes_input, 1, 5, 1, 1)
         self.recorded_display = QtWidgets.QTableWidget(self.centralwidget)
-        self.recorded_display.setGeometry(QtCore.QRect(10, 80, 771, 511))
+        self.recorded_display.setGeometry(QtCore.QRect(10, 80, 971, 511))
         self.recorded_display.setShowGrid(True)
         self.recorded_display.setGridStyle(QtCore.Qt.SolidLine)
         self.recorded_display.setObjectName("recorded_display")
-        self.recorded_display.setColumnCount(4)
+        self.recorded_display.setColumnCount(6)
         self.recorded_display.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.recorded_display.setHorizontalHeaderItem(0, item)
@@ -72,9 +84,13 @@ class Ui_MainWindow(object):
         self.recorded_display.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.recorded_display.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.recorded_display.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.recorded_display.setHorizontalHeaderItem(5, item)
         self.recorded_display.horizontalHeader().setVisible(True)
         self.recorded_display.horizontalHeader().setCascadingSectionResizes(False)
-        self.recorded_display.horizontalHeader().setDefaultSectionSize(173)
+        self.recorded_display.horizontalHeader().setDefaultSectionSize(159)
         self.recorded_display.horizontalHeader().setSortIndicatorShown(True)
         self.recorded_display.horizontalHeader().setStretchLastSection(False)
         self.recorded_display.verticalHeader().setCascadingSectionResizes(False)
@@ -87,7 +103,7 @@ class Ui_MainWindow(object):
 
         # Setup of the global dataframe that holds all Data
         global data
-        data = pd.DataFrame(columns=("call", "intend", "target", "weapons"))
+        data = pd.DataFrame(columns=("call", "intend", "target", "weapons", "fuel", "notes"))
 
         self.register_trigger.clicked.connect(lambda: self.add_item())
         self.clear_trigger.clicked.connect(lambda: self.remove_item())
@@ -106,6 +122,8 @@ class Ui_MainWindow(object):
         self.intend_input.setItemText(3, _translate("MainWindow", "CAP"))
         self.target_label.setText(_translate("MainWindow", "Target Area"))
         self.weapons_label.setText(_translate("MainWindow", "Weapons"))
+        self.fuel_label.setText(_translate("MainWindow", "Fuel"))
+        self.notes_label.setText(_translate("MainWindow", "Notes"))
         self.register_trigger.setText(_translate("MainWindow", "Register"))
         self.callsing_label.setText(_translate("MainWindow", "Callsing"))
         self.clear_trigger.setText(_translate("MainWindow", "Clear"))
@@ -118,6 +136,10 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Target Area"))
         item = self.recorded_display.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Weapons"))
+        item = self.recorded_display.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Fuel"))
+        item = self.recorded_display.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Notes"))
 
     """
     Reads input fields and returns a pandas Series with the right indexes for later assignment
@@ -125,7 +147,8 @@ class Ui_MainWindow(object):
 
     def read_inputs(self):
         new = pd.Series(data={"call": self.callsing_input.text(), "intend": self.intend_input.currentText(),
-                              "target": self.target_input.text(), "weapons": self.weapons_input.text()})
+                              "target": self.target_input.text(), "weapons": self.weapons_input.text(),
+                              "fuel": self.fuel_input.text(), "notes": self.notes_input.text()})
         return new
 
     """
@@ -137,6 +160,8 @@ class Ui_MainWindow(object):
         self.intend_input.setCurrentText("")
         self.target_input.setText("")
         self.weapons_input.setText("")
+        self.fuel_input.setText("")
+        self.notes_input.setText("")
 
     """
     ADDs or updates the table with the new inputs from the text boxes. Is called on Register button press. 
@@ -163,6 +188,13 @@ class Ui_MainWindow(object):
 
             if new_data["weapons"] == "":
                 new_data = new_data.drop("weapons")
+
+            if new_data["fuel"] == "":
+                new_data = new_data.drop("fuel")
+
+            if new_data["notes"] == "":
+                new_data = new_data.drop("notes")
+
             data.iloc[index].update(new_data)
 
             for i in range(len(data.iloc[index])):
@@ -203,8 +235,8 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     import sys
 
-    global data
-    data = pd.DataFrame(columns=("call", "intend", "target", "weapons"))
+    #global data
+    #data = pd.DataFrame(columns=("call", "intend", "target", "weapons", "fuel", "notes"))
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
