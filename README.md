@@ -7,6 +7,9 @@ To update a already existing callsing just type it in and hit Register, all prov
 
 To remove a callsing just type it in and hit clear.
 
+If you have problems with the code you can start a Issue.
+For new feature request just add a coment on the Discussion Feature Requests.
+
 Dependencies:
 PyQt5
 PyQt5-Qt
