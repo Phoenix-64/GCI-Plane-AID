@@ -2,7 +2,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas as pd
 
 
-# python -m PyQt5.uic.pyuic -x raw_window.ui -o raw_window.py
+# python -m PyQt5.uic.pyuic -x raw_window.ui -o raw_window.pys
+# pyinstaller --onefile --noconsole main.py
 
 class Ui_MainWindow(object):
     """
@@ -46,7 +47,6 @@ class Ui_MainWindow(object):
         self.notes_label = QtWidgets.QLabel(self.gridLayoutWidget)
         self.notes_label.setObjectName("notes_label")
         self.gridLayout.addWidget(self.notes_label, 0, 6, 1, 1)
-
 
         self.callsing_input = QtWidgets.QLineEdit(self.gridLayoutWidget)
         self.callsing_input.setClearButtonEnabled(False)
@@ -141,7 +141,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "GCI Plane AID"))
         self.intend_label.setText(_translate("MainWindow", "Intend"))
         self.intend_input.setItemText(0, _translate("MainWindow", ""))
         self.intend_input.setItemText(1, _translate("MainWindow", "SEAD"))
@@ -202,7 +202,7 @@ class Ui_MainWindow(object):
         if new_data[0] == "":
             return
 
-        if new_data[0] in data.values:
+        if new_data[0] in data["call"].values:
 
             index = data.index[data["call"] == new_data[0]][0]
             new_data = new_data.drop("call")
@@ -226,10 +226,6 @@ class Ui_MainWindow(object):
 
             for i in range(len(data.iloc[index])):
                 self.recorded_display.setItem(index, i, QtWidgets.QTableWidgetItem(str(data.iloc[index][i])))
-
-
-
-
         else:
             data.loc[len(data)] = new_data
             rowPosition = self.recorded_display.rowCount()
@@ -249,12 +245,12 @@ class Ui_MainWindow(object):
         global data
 
         to_remove = self.callsing_input.text()
-        if to_remove in data.values:
+        if to_remove in data["call"].values:
             index = data.index[data["call"] == to_remove][0]
             self.recorded_display.removeRow(index)
 
             data = data.drop(index)
-            data = data.reset_index()
+            data = data.reset_index(drop=True)
 
         self.clear_inputs()
 
@@ -262,8 +258,8 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     import sys
 
-    #global data
-    #data = pd.DataFrame(columns=("call", "intend", "target", "weapons", "fuel", "notes"))
+    # global data
+    # data = pd.DataFrame(columns=("call", "intend", "target", "weapons", "fuel", "notes"))
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()

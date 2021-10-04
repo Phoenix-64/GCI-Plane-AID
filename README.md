@@ -10,6 +10,9 @@ To remove a callsing just type it in and hit clear.
 If you have problems with the code you can start a Issue.
 For new feature request just add a coment on the Discussion Feature Requests.
 
+The Executable was build using pyinstaller:
+pyinstaller --onefile --noconsole main.py
+
 Dependencies:
 PyQt5
 PyQt5-Qt
